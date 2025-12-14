@@ -1,9 +1,9 @@
-
 import cv2
 import numpy as np
 import os
+from skimage.feature import hog
 
-def get_image_features(image):    
+def get_color_features(image):
     image = cv2.resize(image, (128, 128))
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
@@ -17,6 +17,24 @@ def get_image_features(image):
 
     cv2.normalize(color_histogram, color_histogram)
     return color_histogram.flatten()
+
+
+
+
+
+def get_hog_features(image):
+    image = cv2.resize(image, (128, 128))
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    hog_features = hog(
+        gray,
+        orientations=9,
+        pixels_per_cell=(8, 8),
+        cells_per_block=(2, 2),
+        block_norm='L2-Hys'
+    )
+    return hog_features
+
 
 def image_augmentation(image):
     img_augmentation = []
@@ -39,42 +57,62 @@ def image_augmentation(image):
     return img_augmentation
 
 
+# ---- Data structures for all three cases ----
+features_color = []
+features_hog = []
+features_both = []
+labels = []
 
-features=[]
-labels=[]
-
-classes = [ "cardboard","glass","metal", "paper", "plastic", "trash"]
+classes = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
 
 for name in classes:
-    pathfolder = os.path.join("dataset",name)
+    pathfolder = os.path.join("dataset", name)
     imgs = os.listdir(pathfolder)
     for img_name in imgs:
-        img_path = os.path.join(pathfolder, img_name)
         if not img_name.lower().endswith(('.png', '.jpg', '.jpeg')):
             continue
-        
-        # img_path = os.path.join(pathfolder, img_name)
-        image = cv2.imread(img_path)
 
+        img_path = os.path.join(pathfolder, img_name)
+        image = cv2.imread(img_path)
         if image is None:
-            # print(f" {img_path} ")
             continue
-        img_features = get_image_features(image)
-        features.append(img_features)  
+
+        # ---- Original Image ----
+        color_feat = get_color_features(image)
+        hog_feat = get_hog_features(image)
+
+        features_color.append(color_feat)
+        features_hog.append(hog_feat)
+        features_both.append(np.concatenate([color_feat, hog_feat]))
         labels.append(classes.index(name))
 
-        augmented_images = image_augmentation(image)  
+        # ---- Augmented Images ----
+        augmented_images = image_augmentation(image)
         for aug_img in augmented_images:
-            aug_features = get_image_features(aug_img)
-            features.append(aug_features)
+            color_feat = get_color_features(aug_img)
+            hog_feat = get_hog_features(aug_img)
+
+            features_color.append(color_feat)
+            features_hog.append(hog_feat)
+            features_both.append(np.concatenate([color_feat, hog_feat]))
             labels.append(classes.index(name))
 
-
-features = np.array(features)
+# ---- Convert to numpy arrays ----
+features_color = np.array(features_color)
+features_hog = np.array(features_hog)
+features_both = np.array(features_both)
 labels = np.array(labels)
 
-np.save('features.npy', features)
+# ---- Save to files ----
+np.save('features_color.npy', features_color)
+np.save('features_hog.npy', features_hog)
+np.save('features_both.npy', features_both)
 np.save('labels.npy', labels)
+
+print("Saved features:")
+print("Color only length:", features_color.shape[1])
+print("HOG only length:", features_hog.shape[1])
+print("Color + HOG length:", features_both.shape[1])
 
 
 # print("features labels")
