@@ -48,7 +48,7 @@ class KNNClassifierWithRejection:
         self.scaler = StandardScaler()
         self.pca = PCA(n_components=self.n_components, whiten=False)
 
-        self.class_names = ["cardboard", "glass", "metal", "paper", "plastic", "trash", "unknown"]
+        self.class_names = ["Glass", "Paper", "Cardboard", "Plastic", "Metal", "Trash", "Unknown"]
         self.n_primary_classes = 6
         self.unknown_class_id = 6
 
