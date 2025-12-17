@@ -63,7 +63,8 @@ features_hog = []
 features_both = []
 labels = []
 
-classes = ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
+
+classes = ["Glass", "Paper", "Cardboard", "Plastic", "Metal", "Trash"]
 
 for name in classes:
     pathfolder = os.path.join("dataset", name)
@@ -124,3 +125,4 @@ print("Color + HOG length:", features_both.shape[1])
 
 
         
+
