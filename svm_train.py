@@ -13,7 +13,7 @@ class SVMClassifier:
         self.scaler = StandardScaler()
         self.svm_model = None
         self.confidence_threshold = 0.5
-        self.class_names = classes = ["Cardboard", "Glass", "Metal", "Paper", "Plastic", "Trash"]
+        self.class_names = classes = ["Glass", "Paper", "Cardboard", "Plastic", "Metal", "Trash"]
 
     def load_data(self):
         print(f"\n{'='*60}")
