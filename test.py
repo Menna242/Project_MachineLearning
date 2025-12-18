@@ -97,28 +97,3 @@ def predict(dataFilePath, bestModelPath):
         print(f"  Class {cls} ({class_names[cls]}): {count} images")
     
     return predictions
-
-
-if __name__ == "__main__":
-    print("="*60)
-    print("TESTING PREDICT FUNCTION")
-    print("="*60)
-    
-    test_data_path = "dataset/trash"  
-    test_model_path = "svm_model_both.pkl"  
-    
-    if not os.path.exists(test_data_path):
-        print(f"\nError: Test data folder '{test_data_path}' not found!")
-    elif not os.path.exists(test_model_path):
-        print(f"\nError: Model file '{test_model_path}' not found!")
-    else:
-        predictions = predict(test_data_path, test_model_path)
-        print(f"Predictions: {predictions[:10]}...")  
-        print(f"\nTotal: {len(predictions)} predictions")
-
-        print(type(predictions)) 
-        print(predictions[0])    
-        print(type(predictions))
-        print(type(predictions[0]))
-        print(all(isinstance(p, int) for p in predictions))
-
