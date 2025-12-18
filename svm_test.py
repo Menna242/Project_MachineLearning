@@ -135,7 +135,7 @@ def test_on_folder(model_path, folder_path):
     
     # Get all image files
     image_files = [f for f in os.listdir(folder_path) 
-                   if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+                   if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp','.webp'))]
     
     print(f"\nFound {len(image_files)} images in {folder_path}")
     
