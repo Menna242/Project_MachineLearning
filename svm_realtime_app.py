@@ -3,8 +3,6 @@ import numpy as np
 import joblib
 import time
 from skimage.feature import hog
-
-
 class RealtimeApp:
     def __init__(self, model_path="svm_model_both.pkl"):
         print("[INFO] Loading SVM model...")
